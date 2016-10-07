@@ -11,11 +11,14 @@ results_sd_normalized <- results %>% group_by(CAP) %>% summarise(sd = sd(normali
 
 ggplot(results_summary, aes(CAP, mean_time)) + geom_line()
 ggplot(results_summary %>% filter(CAP >= 50), aes(CAP, mean_time)) + geom_line()
-
 ggplot(results_sd_normalized, aes(CAP, sd)) + geom_line()
 
 results_summary <- results_summary %>% mutate(performance_loss = c(-diff(results_summary$mean_time)/results_summary$mean_time[2:length(results_summary$mean_time)],0))
-ggplot(results_summary, aes(CAP, performance_loss)) + geom_line()
+
+results_summary <- results_summary %>% mutate(performance_loss2 = mean_time*CAP/100.0)
+ggplot(results_summary, aes(CAP, performance_loss2)) + 
+  geom_line() + 
+  ylab("Performance loss = mean time * cap") +
+  ggtitle("Performance X CAP")
 
 ggsave("cpucap.png")
-
